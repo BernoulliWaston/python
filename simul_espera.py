@@ -17,7 +17,7 @@ import math, random, time
 # 2. Fin_Servicio       T_Servicio      Mecanico_i  3
 # 3. ...
 
-class SFM: # Simulación Fallas Máquinas
+class SFM: # Simulación de Fallas de un conjunto de Máquinas
     def __init__(self, reloj, cap_max_sistema, N_Mecanicos):
         global MEF
         self.reloj = reloj
