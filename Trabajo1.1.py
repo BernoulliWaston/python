@@ -1,6 +1,7 @@
 #!/usr/bin/python
 #-*- coding:utf-8 -*-
-from math import *
+
+# Emerson Potes Rua, cc 98764868
 
 #Punto 1
 def PolyEval(c, x):
@@ -22,53 +23,61 @@ def HornerIt(c, x):
 def PolyDeriv(c):
     n = len(c); c2 = [];
     for i in range(n):
-        if (i == 0):
-            c2.append(0)
-        else:
-            c2.append(i*c[i])
+        if (i > 0): c2.append(i*c[i])    
     return c2
-        
-#Punto 4: Bisección
-class bis:
-    def __init__(self,f,a,b,e,maxiter):
-       self.f = f.replace("x", "{}")
-       self.a = a
-       self.b = b
-       self.e = float(e)
-       self.maxiter = maxiter
 
-    def eq(self, x):
-        return eval(self.f.format(str(x),str(x)))
-         
-    def get_root(self):
-        i = 1;
-        while (i <= self.maxiter):
-            p = (self.a + self.b) / 2.0
-            if (abs(p) > self.e):
-                fa = self.eq(self.a)
-                fp = self.eq(p)
-                if (fa * fp < 0):
-                    self.b = p
-                else:
-                    self.a = p
+
+#Punto 4: Bisección
+def Biseccion(c, a, b, e):
+    fa = HornerIt(c, a) # f(a)
+    fb = HornerIt(c, b) # f(b)
+    if (fa * fb < 0):
+        p = (a + b) / 2.0
+        fp = HornerIt(c, p) # f(p)
+        while (b - a > e or abs(fp) > e):
+            fa = HornerIt(c, a)
+            p = (a + b) / 2.0
+            fp = HornerIt(c, p)
+            if (fa * fp <= 0):
+                b = p
             else:
-                break
-            return "x = " + str(p)
-            """
-            fa = self.eq(self.a)
-            fp = self.eq(p)
-            if (fa * fp < self.maxiter):
-                return "x = " + str(p)
-                break
-            """
-            i += 1
+                a = p
+        return p
+    else:
+        return "El intervalo [{},{}] NO contiene un cero real de f(x)".format(a, b)
+    
+def PolyCeros(c, e):
+    n = len(c); x = [] # Arreglo de ceros reales de f(x)
+    if (n > 2):
+        k = 0
+        for i in c[:len(c)-1]:
+            k += abs(i)
+        M = max(2.0 * float(k)/abs(c[len(c)-1]), 1)
+        c2 = PolyDeriv(c)
+        y = PolyCeros(c2, e)
+        if (len(y) >= 1):
+            aux = y
+            aux.insert(0, -M)
+            aux.insert(len(aux), M)
+            for i in range(len(aux)-1):
+                x.append(Biseccion(c, aux[i], aux[i+1], e))
+    elif (n == 2):
+        x.append(-float(c[0])/c[1])
+    return x
+    
 
 if __name__ == "__main__":
-    c = [2, 1, 3] # 2 + x + 3x**2
-    x = 2
-
+    c = [0, 0, 2] # El orden de c es desde a0 hasta an
+    
+    #x = 2
     ##print PolyEval(c,x)
-    ##print HornerIt(c, x)
-    print PolyDeriv(c)
-    ##print "Metodo de Biseccion.\n"
-    ##print bis("x*sin(x)-1",0,2,0.5,10).get_root()
+    #print HornerIt(c, x)
+    #print PolyDeriv(c)
+    
+##    print "Metodo de Biseccion para c = %s \n"%str(c)
+##    x = Biseccion(c, -3, 0, 0.01)
+##    print "x = " + str(x)
+##    if not isinstance(x, str): print "Prueba: " + str(HornerIt(c, x))
+
+    print PolyCeros(c, 0.01)
+    #print Biseccion(c, -10, 10, 0.01)
