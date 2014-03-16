@@ -67,7 +67,7 @@ def PolyCeros(c, e):
     
 
 if __name__ == "__main__":
-    c = [0, 0, 2] # El orden de c es desde a0 hasta an
+    c = [-6, 14, -7, 1] # El orden de c es desde a0 hasta an siendo 'a' los coeficientes del polinomio
     
     #x = 2
     ##print PolyEval(c,x)
